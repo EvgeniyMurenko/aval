@@ -1,0 +1,139 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Aval</title>
+</h:head>
+
+<h:body>
+    <p:panel id="basic" header="Зона отображение общей информации о пользователе"></p:panel>
+
+    <h:form id="form">
+        <p:growl id="msgs" showDetail="true" />
+
+
+        <p:tabView>
+
+            <p:tab title="Параметры" ></p:tab>
+
+            <p:tab title="Валидация" >
+                <f:facet name="actions">
+                    <p:button value="Редактирывать" style="background-color: #ff006a66" />
+                </f:facet>
+
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-3 ui-g-nopad">
+                        <div class="ui-g-12">
+
+                            <p:dataTable id="groups" var="group" value="#{mainView.groups}" selectionMode="single" selection="#{mainView.selectedGroup}" rowKey="#{group.id}">
+                                <f:facet name="header">
+                                    Группы
+                                </f:facet>
+
+                                <p:ajax event="rowSelect" listener="#{mainView.onRowSelectGroup}" update=":form:j_idt5:functions"/>
+
+                                <p:column colspan="1" headerText="Id">
+                                    <h:outputText value="#{group.id}" />
+                                </p:column>
+                                <p:column colspan="4" headerText="Имя">
+                                    <h:outputText value="#{group.name}" />
+                                </p:column>
+                                <p:column colspan="2" headerText="К-во">
+                                    <h:outputText value="#{group.countActiveFunctions}/#{group.countFunctions}" />
+                                </p:column>
+                            </p:dataTable>
+
+                        </div>
+
+                        <div class="ui-g-12">
+                            <p:commandButton update="groups"  value="Системная проверка" actionListener="#{mainView.refresh}" style="background-color: #ff8d00" />
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-9 ui-g-nopad">
+                        <div class="ui-g-12">
+
+                            <p:dataTable id="functions" var="function" value="${mainView.functions}" editable="true" selectionMode="single"
+                                         selection="#{mainView.selectedFunction}" rowKey="#{function.id}">
+                                <f:facet name="header">
+                                    Функции
+                                </f:facet>
+
+                                <p:ajax event="rowSelect" listener="#{mainView.onRowSelectFunction}" update=":form:j_idt5:parametr"/>
+                                <p:ajax event="rowEdit" listener="#{mainView.onRowEdit}" update=":form:msgs" />
+                                <p:ajax event="rowEditCancel" listener="#{mainView.onRowCancel}" update=":form:msgs" />
+
+                                <p:column colspan="1" headerText="Id">
+                                    <h:outputText value="#{function.id}" />
+                                </p:column>
+
+                                <p:column colspan="2" headerText="Имя">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{function.name}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{function.name}" style="width:100%" label="Имя"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column colspan="1" headerText="К-во">
+                                    <h:outputText value="#{function.countParam}" />
+                                </p:column>
+
+                                <p:column colspan="1" headerText="Активность">
+                                    <p:inputSwitch value="#{function.active}">
+                                        <p:ajax listener="#{mainView.addMessage(function)}" update=":form:j_idt5:groups" />
+                                    </p:inputSwitch>
+                                </p:column>
+
+                                <p:column colspan="4" headerText="Описание">
+                                    <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{function.descr}" /></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{function.descr}" style="width:100%" label="Описание"/></f:facet>
+                                    </p:cellEditor>
+                                </p:column>
+
+                                <p:column style="width:32px">
+                                    <p:rowEditor />
+                                </p:column>
+                            </p:dataTable>
+
+
+                        </div>
+
+                        <div class="ui-g-12">
+
+                            <p:dataTable id="parametr" var="parametr" value="#{mainView.params}">
+                                <f:facet name="header">
+                                    Параметры
+                                </f:facet>
+                                <p:column colspan="1" headerText="Id">
+                                    <h:outputText value="#{parametr.id}" />
+                                </p:column>
+
+                                <p:column colspan="4" headerText="Имя параметра">
+                                    <h:outputText value="#{parametr.name}" />
+                                </p:column>
+
+                                <p:column colspan="5" headerText="Описание">
+                                    <h:outputText value="#{parametr.descr}" />
+                                </p:column>
+
+                            </p:dataTable>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </p:tab>
+            <p:tab title="Группы"></p:tab>
+            <p:tab title="Функции"></p:tab>
+            <p:tab title="Печатный модуль"></p:tab>
+            <p:tab title="Регламенты"></p:tab>
+        </p:tabView>
+    </h:form>
+
+</h:body>
+
+</html>
